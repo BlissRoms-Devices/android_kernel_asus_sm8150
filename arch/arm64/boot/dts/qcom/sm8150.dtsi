@@ -1346,6 +1346,10 @@
 		reg-names = "pshold-base", "tcsr-boot-misc-detect";
 	};
 
+	restart@c264000 {
+		qcom,force-warm-reboot;
+	};
+
 	qcom,msm-rtb {
 		compatible = "qcom,msm-rtb";
 		qcom,rtb-size = <0x100000>;
