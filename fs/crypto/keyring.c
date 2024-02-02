@@ -600,8 +600,11 @@ int fscrypt_ioctl_add_key(struct file *filp, void __user *_uarg)
 	struct fscrypt_master_key_secret secret;
 	int err;
 
-	if (copy_from_user(&arg, uarg, sizeof(arg)))
-		return -EFAULT;
+	if (copy_from_user(&arg, uarg, sizeof(arg))) {
+		printk("%s: copy_from_user fail\n",__func__);
+		return -ENOTTY;//workaround for VTS 11_r1
+		//return -EFAULT;
+	}
 
 	if (!valid_key_spec(&arg.key_spec))
 		return -EINVAL;

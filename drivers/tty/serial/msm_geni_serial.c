@@ -3168,6 +3168,16 @@ exit_ver_info:
 	return ret;
 }
 
+unsigned uart_info = 0;
+EXPORT_SYMBOL(uart_info);
+
+static int __init get_uart_info(char *p)
+{
+	uart_info = 1;
+	return 0;
+}
+early_param("UART", get_uart_info);
+
 static int msm_geni_serial_probe(struct platform_device *pdev)
 {
 	int ret = 0;
@@ -3312,6 +3322,7 @@ static int msm_geni_serial_probe(struct platform_device *pdev)
 
 	/* Optional to use the Rx pin as wakeup irq */
 	dev_port->wakeup_irq = platform_get_irq(pdev, 1);
+   dev_info(&pdev->dev, "wakeup_irq 0x%d\n", dev_port->wakeup_irq);
 	if ((dev_port->wakeup_irq < 0 && !is_console))
 		dev_info(&pdev->dev, "No wakeup IRQ configured\n");
 
@@ -3555,7 +3566,7 @@ static int msm_geni_serial_sys_suspend_noirq(struct device *dev)
 	struct msm_geni_serial_port *port = platform_get_drvdata(pdev);
 	struct uart_port *uport = &port->uport;
 
-	if (uart_console(uport) || !pm_runtime_enabled(uport->dev)) {
+	if (uart_console(uport) || port->pm_auto_suspend_disable) {
 		uart_suspend_port((struct uart_driver *)uport->private_data,
 					uport);
 	} else {
@@ -3586,7 +3597,7 @@ static int msm_geni_serial_sys_resume_noirq(struct device *dev)
 
 	if ((uart_console(uport) &&
 	    console_suspend_enabled && uport->suspended) ||
-		!pm_runtime_enabled(uport->dev)) {
+		port->pm_auto_suspend_disable) {
 		uart_resume_port((struct uart_driver *)uport->private_data,
 									uport);
 	}

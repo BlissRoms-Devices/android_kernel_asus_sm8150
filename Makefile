@@ -995,6 +995,15 @@ KBUILD_CPPFLAGS += $(ARCH_CPPFLAGS) $(KCPPFLAGS)
 KBUILD_AFLAGS   += $(ARCH_AFLAGS)   $(KAFLAGS)
 KBUILD_CFLAGS   += $(ARCH_CFLAGS)   $(KCFLAGS)
 
+# Add ASUS build option to KBUILD_CPPFLAGS
+ifdef CONFIG_ASUS_USERDEBUG_BUILD
+KBUILD_CPPFLAGS += -DASUS_USERDEBUG_BUILD=1
+endif
+
+ifdef CONFIG_ASUS_USER_BUILD
+KBUILD_CPPFLAGS += -DASUS_USER_BUILD=1
+endif
+
 # Use --build-id when available.
 LDFLAGS_BUILD_ID := $(patsubst -Wl$(comma)%,%,\
 			      $(call cc-ldoption, -Wl$(comma)--build-id,))
