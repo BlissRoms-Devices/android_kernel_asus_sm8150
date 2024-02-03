@@ -75,10 +75,6 @@
 
 #include <ol_defines.h>
 
-//ASUS_BSP+++ "for /data/log/ASUSEvtlog"
-#include <linux/asusdebug.h>
-//ASUS_BSP--- "for /data/log/ASUSEvtlog"
-
 /* These are needed to recognize WPA and RSN suite types */
 #define HDD_WPA_OUI_SIZE 4
 #define HDD_RSN_OUI_SIZE 4
@@ -1522,12 +1518,6 @@ static void hdd_send_association_event(struct net_device *dev,
 			      QDF_MAC_ADDR_ARRAY(adapter->mac_addr.bytes),
 			      QDF_MAC_ADDR_ARRAY(wrqu.ap_addr.sa_data));
 
-		//ASUS_BSP+++ "for /data/log/ASUSEvtlog"
-		ASUSEvtlog("[wlan]: " QDF_MAC_ADDR_STR " connected to " QDF_MAC_ADDR_STR "\n",
-			QDF_MAC_ADDR_ARRAY(adapter->mac_addr.bytes),
-			QDF_MAC_ADDR_ARRAY(wrqu.ap_addr.sa_data));
-		//ASUS_BSP--- "for /data/log/ASUSEvtlog"
-
 		hdd_send_update_beacon_ies_event(adapter, roam_info);
 
 		/*
@@ -1606,9 +1596,6 @@ static void hdd_send_association_event(struct net_device *dev,
 	} else {                /* Not Associated */
 		hdd_nofl_info("[%s](vdevid-%d): disconnected", dev->name,
 			      adapter->vdev_id);
-		//ASUS_BSP+++ "for /data/log/ASUSEvtlog"
-		ASUSEvtlog("[wlan]: disconnected.\n");
-		//ASUS_BSP--- "for /data/log/ASUSEvtlog"
 		memset(wrqu.ap_addr.sa_data, '\0', ETH_ALEN);
 		policy_mgr_decr_session_set_pcl(hdd_ctx->psoc,
 				adapter->device_mode, adapter->vdev_id);
